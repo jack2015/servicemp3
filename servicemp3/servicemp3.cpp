@@ -2696,7 +2696,7 @@ void eServiceMP3::HandleTocEntry(GstMessage *msg)
 		for (GList* i = gst_toc_get_entries(toc); i; i = i->next)
 		{
 			GstTocEntry *entry = static_cast<GstTocEntry*>(i->data);
-			if (gst_toc_entry_get_entry_type (entry) == GST_TOC_ENTRY_TYPE_EDITION && eConfigManager::getConfigBoolValue("config.usage.useChapterInfo"))
+			if (gst_toc_entry_get_entry_type (entry) == GST_TOC_ENTRY_TYPE_EDITION)
 			{
 				/* extra debug info for testing purposes should_be_removed later on */
 				//eDebug("[eServiceMP3] toc_type %s", gst_toc_entry_type_get_nick(gst_toc_entry_get_entry_type (entry)));
@@ -3540,13 +3540,11 @@ void eServiceMP3::saveCuesheet()
 
 	struct stat s;
 	bool removefile = false;
-	bool use_videocuesheet = eConfigManager::getConfigBoolValue("config.usage.useVideoCuesheet"); 
-	bool use_audiocuesheet = eConfigManager::getConfigBoolValue("config.usage.useAudioCuesheet");
 	bool exist_cuesheetfile = (stat(filename.c_str(), &s) == 0);
 
 	if (!exist_cuesheetfile && m_cue_entries.size() == 0)
 		return;
-	else if ((use_videocuesheet && !m_sourceinfo.is_audio) || (m_sourceinfo.is_audio && use_audiocuesheet))
+	else if (!m_sourceinfo.is_audio || m_sourceinfo.is_audio)
 	{
 		if (m_cue_entries.size() == 0)
 		{
