@@ -2178,7 +2178,6 @@ void eServiceMP3::gstBusCall(GstMessage *msg)
 				case GST_STATE_CHANGE_NULL_TO_READY:
 				{
 					m_first_paused = true;
-					m_event(this, evStart);
 					if(!m_is_live)
 						gst_element_set_state (m_gst_playbin, GST_STATE_PAUSED);
 					ret = gst_element_get_state(m_gst_playbin, &state, &pending, 5LL * GST_SECOND);
@@ -2195,6 +2194,7 @@ void eServiceMP3::gstBusCall(GstMessage *msg)
 				case GST_STATE_CHANGE_READY_TO_PAUSED:
 				{
 					m_state = stRunning;
+					m_event(this, evStart);
 					if (dvb_subsink)
 					{
 #ifdef GSTREAMER_SUBTITLE_SYNC_MODE_BUG
@@ -2265,9 +2265,6 @@ void eServiceMP3::gstBusCall(GstMessage *msg)
 					m_paused = true;
 				}	break;
 				case GST_STATE_CHANGE_PAUSED_TO_READY:
-				{
-				}	break;
-				case GST_STATE_CHANGE_READY_TO_NULL:
 				{
 				}	break;
 			}
