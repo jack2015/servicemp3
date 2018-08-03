@@ -1739,9 +1739,9 @@ int eServiceMP3::getInfo(int w)
 	case sBuffer: return m_bufferInfo.bufferPercent;
 	case sVideoType:
 	{
-		if (!videoSink) return -1;
+		if (!dvb_videosink) return -1;
 		guint64 v = -1;
-		g_signal_emit_by_name(videoSink, "get-video-codec", &v);
+		g_signal_emit_by_name(dvb_videosink, "get-video-codec", &v);
 		return (int) v;
 		break;
 	}
