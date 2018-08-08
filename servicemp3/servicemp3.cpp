@@ -643,6 +643,11 @@ eServiceMP3::eServiceMP3(eServiceReference ref):
 		m_sourceinfo.audiotype = atFLAC;
 		m_sourceinfo.is_audio = TRUE;
 	}
+	else if (strcasecmp(ext, ".ac3") == 0)
+	{
+		m_sourceinfo.audiotype = atAC3;
+		m_sourceinfo.is_audio = TRUE;
+	}
 	else if (strcasecmp(ext, ".cda") == 0)
 		m_sourceinfo.containertype = ctCDA;
 	if (strcasecmp(ext, ".dat") == 0)
