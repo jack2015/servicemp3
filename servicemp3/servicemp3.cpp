@@ -2087,18 +2087,6 @@ void eServiceMP3::gstBusCall(GstMessage *msg)
 	GstState state, pending, old_state, new_state;
 	GstStateChangeReturn ret;
 	GstStateChange transition;
-#if 0
-	gchar *string = NULL;
-	if (gst_message_get_structure(msg))
-		string = gst_structure_to_string(gst_message_get_structure(msg));
-	else
-		string = g_strdup(GST_MESSAGE_TYPE_NAME(msg));
-	if (string)
-	{
-		eDebug("[eServiceMP3] eTsRemoteSource::gst_message from %s: %s", sourceName, string);
-		g_free(string);
-	}
-#endif
 	switch (GST_MESSAGE_TYPE (msg))
 	{
 		case GST_MESSAGE_EOS:
@@ -2157,14 +2145,6 @@ void eServiceMP3::gstBusCall(GstMessage *msg)
 						g_object_set (dvb_subsink, "sync", FALSE, NULL);
 #endif
 
-#if 0
-						/* we should not use ts-offset to sync with the decoder time, we have to do our own decoder timekeeping */
-						g_object_set (G_OBJECT (subsink), "ts-offset", -2LL * GST_SECOND, NULL);
-						/* late buffers probably will not occur very often */
-						g_object_set (G_OBJECT (subsink), "max-lateness", 0LL, NULL);
-						/* avoid prerolling (it might not be a good idea to preroll a sparse stream) */
-						g_object_set (G_OBJECT (subsink), "async", TRUE, NULL);
-#endif
 						// eDebug("[eServiceMP3] subsink properties set!");
 					}
 
@@ -3092,23 +3072,6 @@ void eServiceMP3::pushSubtitles()
 	decoder_ms = running_pts / 90;
 	delay_ms = 0;
 
-#if 0
-		// eDebug("\n*** all subs: ");
-
-		for (current = m_subtitle_pages.begin(); current != m_subtitle_pages.end(); current++)
-		{
-			start_ms = current->second.start_ms;
-			end_ms = current->second.end_ms;
-			diff_start_ms = start_ms - decoder_ms;
-			diff_end_ms = end_ms - decoder_ms;
-
-			// eDebug("[eServiceMP3]    start: %d, end: %d, diff_start: %d, diff_end: %d: %s",
-					start_ms, end_ms, diff_start_ms, diff_end_ms, current->second.text.c_str());
-		}
-
-		// eDebug("\n\n");
-#endif
-
 	if (m_currentSubtitleStream >= 0 && m_currentSubtitleStream < (int)m_subtitleStreams.size() &&
 		m_subtitleStreams[m_currentSubtitleStream].type &&
 		m_subtitleStreams[m_currentSubtitleStream].type < stVOB)
@@ -3125,11 +3088,6 @@ void eServiceMP3::pushSubtitles()
 		end_ms = (current->second.end_ms * convert_fps) + delay_ms;
 		diff_start_ms = start_ms - decoder_ms;
 		diff_end_ms = end_ms - decoder_ms;
-
-#if 0
-		// eDebug("[eServiceMP3] *** next subtitle: decoder: %d, start: %d, end: %d, duration_ms: %d, diff_start: %d, diff_end: %d : %s",
-			decoder_ms, start_ms, end_ms, end_ms - start_ms, diff_start_ms, diff_end_ms, current->second.text.c_str());
-#endif
 
 		if (diff_end_ms < 0)
 		{
