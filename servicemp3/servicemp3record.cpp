@@ -37,11 +37,7 @@ eServiceMP3Record::~eServiceMP3Record()
 	{
 		// disconnect sync handler callback
 		GstBus *bus = gst_pipeline_get_bus(GST_PIPELINE(m_recording_pipeline));
-#if GST_VERSION_MAJOR < 1
-		gst_bus_set_sync_handler(bus, NULL, NULL);
-#else
 		gst_bus_set_sync_handler(bus, NULL, NULL, NULL);
-#endif
 		gst_object_unref(bus);
 	}
 
